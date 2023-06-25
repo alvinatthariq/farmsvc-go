@@ -17,6 +17,7 @@ const (
 )
 
 type APIStatistic struct {
-	Count           int64 `json:"count"`
-	UniqueUserAgent int64 `json:"unique_user_agent"`
+	Path            string `json:"path"`
+	Count           int64  `json:"count"`
+	UniqueUserAgent int64  `json:"unique_user_agent"`
 }

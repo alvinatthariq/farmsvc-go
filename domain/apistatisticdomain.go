@@ -35,7 +35,6 @@ func (d *domain) GetAPIStatistic() (apiStatistics []entity.APIStatistic, err err
 			if !errors.Is(err, redis.Nil) {
 				return apiStatistics, err
 			}
-			return apiStatistics, err
 		}
 
 		resUa := d.redisClient.PFCount(apiPath + "ua")
@@ -48,6 +47,7 @@ func (d *domain) GetAPIStatistic() (apiStatistics []entity.APIStatistic, err err
 		uniqueUserAgent := resUa.Val()
 
 		apiStat := entity.APIStatistic{
+			Path:            apiPath,
 			Count:           count,
 			UniqueUserAgent: uniqueUserAgent,
 		}
