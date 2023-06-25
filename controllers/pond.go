@@ -43,9 +43,9 @@ func (c *controller) GetPondByID(w http.ResponseWriter, r *http.Request) {
 	// upsert api statistic
 	c.domain.UpsertAPIStatistic(entity.APIPathGETPondByID, r.UserAgent())
 
-	PondID := mux.Vars(r)["id"]
+	pondID := mux.Vars(r)["id"]
 
-	pondRes, err := c.domain.GetPondByID(PondID)
+	pondRes, err := c.domain.GetPondByID(pondID)
 	if err != nil {
 		httpRespError(w, r, fmt.Errorf("Error when get pond by id : %w", err), http.StatusInternalServerError)
 		return
