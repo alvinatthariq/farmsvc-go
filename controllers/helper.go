@@ -78,6 +78,29 @@ func httpRespSuccess(w http.ResponseWriter, r *http.Request, statusCode int, res
 		if err != nil {
 			statusCode = http.StatusInternalServerError
 		}
+	case entity.Pond:
+		httpResp := &entity.HTTPPondResp{
+			Meta: meta,
+			Data: entity.HTTPPondData{
+				Pond: data,
+			},
+		}
+		raw, err = json.Marshal(httpResp)
+		if err != nil {
+			statusCode = http.StatusInternalServerError
+		}
+	case []entity.Pond:
+		httpResp := &entity.HTTPPondsResp{
+			Meta: meta,
+			Data: entity.HTTPPondsData{
+				Ponds: data,
+			},
+			Pagination: p,
+		}
+		raw, err = json.Marshal(httpResp)
+		if err != nil {
+			statusCode = http.StatusInternalServerError
+		}
 	case []entity.APIStatistic:
 		httpResp := &entity.HTTPAPIStatisticsResp{
 			Meta: meta,

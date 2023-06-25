@@ -93,7 +93,7 @@ func (c *controller) UpdateFarm(w http.ResponseWriter, r *http.Request) {
 	httpRespSuccess(w, r, http.StatusOK, farm, nil)
 }
 
-func (c *controller) DeleteFarm(w http.ResponseWriter, r *http.Request) {
+func (c *controller) DeleteFarmByID(w http.ResponseWriter, r *http.Request) {
 	// upsert api statistic
 	c.domain.UpsertAPIStatistic(entity.APIPathDELETEFarmByID, r.UserAgent())
 
@@ -110,14 +110,4 @@ func (c *controller) DeleteFarm(w http.ResponseWriter, r *http.Request) {
 	}
 
 	httpRespSuccess(w, r, http.StatusOK, nil, nil)
-}
-
-func (c *controller) GetAPIStatistic(w http.ResponseWriter, r *http.Request) {
-	apiStatistics, err := c.domain.GetAPIStatistic()
-	if err != nil {
-		httpRespError(w, r, err, http.StatusInternalServerError)
-		return
-	}
-
-	httpRespSuccess(w, r, http.StatusOK, apiStatistics, nil)
 }

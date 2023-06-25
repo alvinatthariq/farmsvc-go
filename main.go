@@ -32,6 +32,8 @@ func main() {
 	// Initialize Database SQL
 	ConnectSQL(AppConfig.MySQL.ConnectionString)
 	MigrateSQL()
+
+	// Initialize Redis
 	ConnectRedis()
 
 	// Initialize the router
@@ -63,6 +65,7 @@ func ConnectSQL(connectionString string) {
 
 func MigrateSQL() {
 	dbgorm.AutoMigrate(&entity.Farm{})
+	dbgorm.AutoMigrate(&entity.Pond{})
 	log.Println("Database Migration Completed...")
 }
 

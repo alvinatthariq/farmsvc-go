@@ -15,3 +15,16 @@ type Pond struct {
 	DeletedAt   sql.NullTime `json:"-"`
 	IsDeleted   sql.NullBool `json:"-"`
 }
+
+type CreatePondRequest struct {
+	ID          string `json:"id"`
+	FarmID      string `json:"farm_id"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+}
+
+type UpdatePondRequest struct {
+	FarmID      string `json:"farm_id"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+}

@@ -10,6 +10,11 @@ const (
 )
 
 var (
+	// error farm
 	ErrorFarmNotFound     error = fmt.Errorf("Farm Not Found")
 	ErrorFarmAlreadyExist error = fmt.Errorf("Farm Already Exist")
+
+	// error pond
+	ErrorPondNotFound     error = fmt.Errorf("Pond Not Found")
+	ErrorPondAlreadyExist error = fmt.Errorf("Pond Already Exist")
 )

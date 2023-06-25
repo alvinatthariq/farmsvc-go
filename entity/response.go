@@ -40,3 +40,22 @@ type HTTPAPIStatisticsResp struct {
 type HTTPAPIStatisticsData struct {
 	APIStatistics []APIStatistic `json:"api_statistics"`
 }
+
+type HTTPPondResp struct {
+	Meta Meta         `json:"meta"`
+	Data HTTPPondData `json:"data"`
+}
+
+type HTTPPondData struct {
+	Pond Pond `json:"pond"`
+}
+
+type HTTPPondsResp struct {
+	Meta       Meta          `json:"meta"`
+	Data       HTTPPondsData `json:"data"`
+	Pagination *Pagination   `json:"pagination,omitempty"`
+}
+
+type HTTPPondsData struct {
+	Ponds []Pond `json:"ponds"`
+}
