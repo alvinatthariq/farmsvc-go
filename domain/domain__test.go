@@ -58,6 +58,7 @@ func TestCreateFarm(t *testing.T) {
 			testType string
 			testDesc string
 			payload  entity.CreateFarmRequest
+			prepare  func()
 		}{
 			{
 				testID:   1,
@@ -67,6 +68,11 @@ func TestCreateFarm(t *testing.T) {
 					ID:          "integtest",
 					Name:        "name test",
 					Description: "test",
+				},
+				prepare: func() {
+					// delete data before create
+					farm := entity.Farm{}
+					dbgorm.Where("id = ?", "integtest").Delete(&farm)
 				},
 			},
 			{
@@ -78,16 +84,12 @@ func TestCreateFarm(t *testing.T) {
 					Name:        "name test",
 					Description: "test",
 				},
+				prepare: func() {},
 			},
 		}
 
 		for _, tc := range testCases {
-			// delete data before create
-			farm := entity.Farm{}
-			if tc.testType == "P" {
-				dbgorm.Where("id = ?", tc.payload.ID).Delete(&farm)
-			}
-
+			tc.prepare()
 			t.Logf("%d - [%s] : %s", tc.testID, tc.testType, tc.testDesc)
 			_, err := dom.CreateFarm(tc.payload)
 			if tc.testType == "P" {
@@ -106,32 +108,34 @@ func TestGetFarmByID(t *testing.T) {
 			testType string
 			testDesc string
 			farmID   string
+			prepare  func()
 		}{
 			{
 				testID:   1,
 				testDesc: "Success get farm by id",
 				testType: "P",
 				farmID:   "integ-test",
+				prepare: func() {
+					// insert data before get
+					farm := entity.Farm{
+						ID:          "integ-test",
+						Name:        "integ-test",
+						Description: "integ-test",
+					}
+					dbgorm.Create(&farm)
+				},
 			},
 			{
 				testID:   2,
 				testDesc: "Success get farm by id, not found",
 				testType: "P",
 				farmID:   "invalid-id",
+				prepare:  func() {},
 			},
 		}
 
 		for _, tc := range testCases {
-			// insert data before create
-			farm := entity.Farm{
-				ID:          "integ-test",
-				Name:        "integ-test",
-				Description: "integ-test",
-			}
-			if tc.testType == "P" {
-				dbgorm.Create(&farm)
-			}
-
+			tc.prepare()
 			t.Logf("%d - [%s] : %s", tc.testID, tc.testType, tc.testDesc)
 			_, err := dom.GetFarmByID(tc.farmID)
 			if tc.testType == "P" {
@@ -149,27 +153,156 @@ func TestGetFarm(t *testing.T) {
 			testID   int
 			testType string
 			testDesc string
+			prepare  func()
 		}{
 			{
 				testID:   1,
 				testDesc: "Success get farm",
 				testType: "P",
+				prepare: func() {
+					// insert data before get
+					farm := entity.Farm{
+						ID:          "integ-test",
+						Name:        "integ-test",
+						Description: "integ-test",
+					}
+					dbgorm.Create(&farm)
+				},
 			},
 		}
 
 		for _, tc := range testCases {
-			// insert data before create
-			farm := entity.Farm{
-				ID:          "integ-test",
-				Name:        "integ-test",
-				Description: "integ-test",
-			}
-			if tc.testType == "P" {
-				dbgorm.Create(&farm)
-			}
-
+			tc.prepare()
 			t.Logf("%d - [%s] : %s", tc.testID, tc.testType, tc.testDesc)
 			_, err := dom.GetFarm()
+			if tc.testType == "P" {
+				So(err, ShouldBeNil)
+			} else {
+				So(err, ShouldNotBeNil)
+			}
+		}
+	})
+}
+
+func TestUpdateFarm(t *testing.T) {
+	Convey("TestUpdateFarm", t, FailureHalts, func() {
+		testCases := []struct {
+			testID   int
+			testType string
+			testDesc string
+			in       struct {
+				farmID  string
+				payload entity.UpdateFarmRequest
+			}
+			prepare func()
+		}{
+			{
+				testID:   1,
+				testDesc: "Success update farm",
+				testType: "P",
+				in: struct {
+					farmID  string
+					payload entity.UpdateFarmRequest
+				}{
+					farmID: "integ-test",
+					payload: entity.UpdateFarmRequest{
+						Name:        "test-update",
+						Description: "test-update",
+					},
+				},
+				prepare: func() {
+					// insert data before create
+					farm := entity.Farm{
+						ID:          "integ-test",
+						Name:        "integ-test",
+						Description: "integ-test",
+					}
+					dbgorm.Create(&farm)
+				},
+			},
+			{
+				testID:   2,
+				testDesc: "Success upsert farm",
+				testType: "P",
+				in: struct {
+					farmID  string
+					payload entity.UpdateFarmRequest
+				}{
+					farmID: "integ-test",
+					payload: entity.UpdateFarmRequest{
+						Name:        "test-update",
+						Description: "test-update",
+					},
+				},
+				prepare: func() {
+					// delete data before update
+					farm := entity.Farm{}
+					dbgorm.Where("id = ?", "integ-test").Delete(&farm)
+				},
+			},
+		}
+
+		for _, tc := range testCases {
+			tc.prepare()
+			t.Logf("%d - [%s] : %s", tc.testID, tc.testType, tc.testDesc)
+			_, err := dom.UpdateFarm(tc.in.farmID, tc.in.payload)
+			if tc.testType == "P" {
+				So(err, ShouldBeNil)
+			} else {
+				So(err, ShouldNotBeNil)
+			}
+		}
+	})
+}
+
+func TestDeleteFarmByID(t *testing.T) {
+	Convey("TestDeleteFarmByID", t, FailureHalts, func() {
+		testCases := []struct {
+			testID   int
+			testType string
+			testDesc string
+			in       struct {
+				farmID string
+			}
+			prepare func()
+		}{
+			{
+				testID:   1,
+				testDesc: "Success delete farm",
+				testType: "P",
+				in: struct {
+					farmID string
+				}{
+					farmID: "integ-test",
+				},
+				prepare: func() {
+					// insert data before create
+					farm := entity.Farm{
+						ID:          "integ-test",
+						Name:        "integ-test",
+						Description: "integ-test",
+					}
+					dbgorm.Create(&farm)
+				},
+			},
+			{
+				testID:   2,
+				testDesc: "failed delete farm",
+				testType: "N",
+				in: struct {
+					farmID string
+				}{
+					farmID: "invalid",
+				},
+				prepare: func() {
+				},
+			},
+		}
+
+		for _, tc := range testCases {
+			tc.prepare()
+			t.Logf("%d - [%s] : %s", tc.testID, tc.testType, tc.testDesc)
+			err := dom.DeleteFarmByID(tc.in.farmID)
 			if tc.testType == "P" {
 				So(err, ShouldBeNil)
 			} else {

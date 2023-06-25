@@ -74,4 +74,5 @@ func ConnectRedis() {
 		Addr:     AppConfig.Redis.Host,
 		Password: AppConfig.Redis.Password,
 	})
+	log.Println("Connected to Redis...")
 }
