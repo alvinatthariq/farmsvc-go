@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	"github.com/alvinatthariq/farmsvc-go/entity"
+
 	"github.com/go-redis/redis"
 )
 
