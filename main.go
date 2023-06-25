@@ -9,6 +9,7 @@ import (
 	"github.com/alvinatthariq/farmsvc-go/domain"
 	"github.com/alvinatthariq/farmsvc-go/entity"
 
+	"github.com/go-redis/redis"
 	"github.com/gorilla/mux"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -16,9 +17,10 @@ import (
 )
 
 var (
-	dbgorm *gorm.DB
-	router *mux.Router
-	err    error
+	dbgorm      *gorm.DB
+	router      *mux.Router
+	redisClient *redis.Client
+	err         error
 
 	dom domain.DomainItf
 )
@@ -30,12 +32,13 @@ func main() {
 	// Initialize Database SQL
 	ConnectSQL(AppConfig.MySQL.ConnectionString)
 	MigrateSQL()
+	ConnectRedis()
 
 	// Initialize the router
 	router = mux.NewRouter().StrictSlash(true)
 
 	// Initialize domain
-	dom = domain.Init(dbgorm)
+	dom = domain.Init(dbgorm, redisClient)
 
 	// Initialize controller
 	controllers.Init(dbgorm, router, dom)
@@ -61,4 +64,11 @@ func ConnectSQL(connectionString string) {
 func MigrateSQL() {
 	dbgorm.AutoMigrate(&entity.Farm{})
 	log.Println("Database Migration Completed...")
+}
+
+func ConnectRedis() {
+	redisClient = redis.NewClient(&redis.Options{
+		Addr:     AppConfig.Redis.Host,
+		Password: AppConfig.Redis.Password,
+	})
 }

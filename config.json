@@ -1,6 +1,10 @@
 {
+    "port": 8080,
     "mysql":{
         "connection_string": "root:@tcp(127.0.0.1:3306)/farm_db?parseTime=true"
     },
-    "port": 8080
+    "redis": {
+        "host": "127.0.0.1:49879",
+        "password": ""
+    }
 }

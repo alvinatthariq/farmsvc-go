@@ -57,3 +57,12 @@ type Meta struct {
 type HTTPEmptyResp struct {
 	Meta Meta `json:"metadata"`
 }
+
+type HTTPAPIStatisticsResp struct {
+	Meta Meta                  `json:"meta"`
+	Data HTTPAPIStatisticsData `json:"data"`
+}
+
+type HTTPAPIStatisticsData struct {
+	APIStatistics []APIStatistic `json:"api_statistics"`
+}

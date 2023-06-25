@@ -12,6 +12,9 @@ import (
 )
 
 func (c *controller) CreateFarm(w http.ResponseWriter, r *http.Request) {
+	// upsert api statistic
+	c.domain.UpsertAPIStatistic(entity.APIPathPOSTFarm, r.UserAgent())
+
 	// parse request body
 	var createFarmRequest entity.CreateFarmRequest
 	if err := json.NewDecoder(r.Body).Decode(&createFarmRequest); err != nil {
@@ -32,7 +35,10 @@ func (c *controller) CreateFarm(w http.ResponseWriter, r *http.Request) {
 	httpRespSuccess(w, r, http.StatusCreated, farm, nil)
 }
 
-func (c *controller) GetFarmById(w http.ResponseWriter, r *http.Request) {
+func (c *controller) GetFarmByID(w http.ResponseWriter, r *http.Request) {
+	// upsert api statistic
+	c.domain.UpsertAPIStatistic(entity.APIPathGETFarmByID, r.UserAgent())
+
 	farmID := mux.Vars(r)["id"]
 
 	farmRes, err := c.domain.GetFarmByID(farmID)
@@ -48,6 +54,9 @@ func (c *controller) GetFarmById(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c *controller) GetFarm(w http.ResponseWriter, r *http.Request) {
+	// upsert api statistic
+	c.domain.UpsertAPIStatistic(entity.APIPathGETFarm, r.UserAgent())
+
 	farms, err := c.domain.GetFarm()
 	if err != nil {
 		httpRespError(w, r, err, http.StatusInternalServerError)
@@ -63,6 +72,9 @@ func (c *controller) GetFarm(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c *controller) UpdateFarm(w http.ResponseWriter, r *http.Request) {
+	// upsert api statistic
+	c.domain.UpsertAPIStatistic(entity.APIPathPUTFarmByID, r.UserAgent())
+
 	farmID := mux.Vars(r)["id"]
 
 	// read request body
@@ -82,6 +94,9 @@ func (c *controller) UpdateFarm(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c *controller) DeleteFarm(w http.ResponseWriter, r *http.Request) {
+	// upsert api statistic
+	c.domain.UpsertAPIStatistic(entity.APIPathDELETEFarmByID, r.UserAgent())
+
 	farmID := mux.Vars(r)["id"]
 
 	err := c.domain.DeleteFarmByID(farmID)
@@ -95,4 +110,14 @@ func (c *controller) DeleteFarm(w http.ResponseWriter, r *http.Request) {
 	}
 
 	httpRespSuccess(w, r, http.StatusOK, nil, nil)
+}
+
+func (c *controller) GetAPIStatistic(w http.ResponseWriter, r *http.Request) {
+	apiStatistics, err := c.domain.GetAPIStatistic()
+	if err != nil {
+		httpRespError(w, r, err, http.StatusInternalServerError)
+		return
+	}
+
+	httpRespSuccess(w, r, http.StatusOK, apiStatistics, nil)
 }

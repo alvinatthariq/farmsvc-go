@@ -17,6 +17,8 @@ type MySQLConfig struct {
 }
 
 type RedisConfig struct {
+	Host     string `mapstructure:"host"`
+	Password string `mapstructure:"password"`
 }
 
 var AppConfig *Config

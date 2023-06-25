@@ -27,8 +27,11 @@ func Init(gorm *gorm.DB, router *mux.Router, domain domain.DomainItf) {
 func (c *controller) Serve() {
 	// farm
 	c.router.HandleFunc("/v1/farm", c.GetFarm).Methods("GET")
-	c.router.HandleFunc("/v1/farm/{id}", c.GetFarmById).Methods("GET")
+	c.router.HandleFunc("/v1/farm/{id}", c.GetFarmByID).Methods("GET")
 	c.router.HandleFunc("/v1/farm", c.CreateFarm).Methods("POST")
 	c.router.HandleFunc("/v1/farm/{id}", c.UpdateFarm).Methods("PUT")
 	c.router.HandleFunc("/v1/farm/{id}", c.DeleteFarm).Methods("DELETE")
+
+	// api statistic
+	c.router.HandleFunc("/v1/api/statistic", c.GetAPIStatistic).Methods("GET")
 }

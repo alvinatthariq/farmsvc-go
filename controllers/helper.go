@@ -78,6 +78,17 @@ func httpRespSuccess(w http.ResponseWriter, r *http.Request, statusCode int, res
 		if err != nil {
 			statusCode = http.StatusInternalServerError
 		}
+	case []entity.APIStatistic:
+		httpResp := &entity.HTTPAPIStatisticsResp{
+			Meta: meta,
+			Data: entity.HTTPAPIStatisticsData{
+				APIStatistics: data,
+			},
+		}
+		raw, err = json.Marshal(httpResp)
+		if err != nil {
+			statusCode = http.StatusInternalServerError
+		}
 
 	default:
 		httpRespError(w, r, fmt.Errorf("cannot cast type of %+v", data), http.StatusInternalServerError)

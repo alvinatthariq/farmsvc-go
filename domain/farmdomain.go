@@ -63,6 +63,7 @@ func (d *domain) UpdateFarm(farmID string, v entity.UpdateFarmRequest) (farm ent
 	if err != nil {
 		return farm, err
 	} else if farmRes == nil {
+		// create if not exist
 		farm, err = d.CreateFarm(entity.CreateFarmRequest{
 			ID:          farmID,
 			Name:        v.Name,
@@ -72,7 +73,7 @@ func (d *domain) UpdateFarm(farmID string, v entity.UpdateFarmRequest) (farm ent
 			return farm, err
 		}
 	} else {
-		// update
+		// update if exist
 		farm = *farmRes
 		farm.Name = v.Name
 		farm.Description = v.Description
