@@ -88,6 +88,7 @@ func (d *domain) UpdatePond(pondID string, v entity.UpdatePondRequest) (pond ent
 		// create if not exist
 		pond, err = d.CreatePond(entity.CreatePondRequest{
 			ID:          pondID,
+			FarmID:      v.FarmID,
 			Name:        v.Name,
 			Description: v.Description,
 		})
@@ -97,6 +98,7 @@ func (d *domain) UpdatePond(pondID string, v entity.UpdatePondRequest) (pond ent
 	} else {
 		// update if exist
 		pond = *pondRes
+		pond.FarmID = v.FarmID
 		pond.Name = v.Name
 		pond.Description = v.Description
 		pond.UpdatedAt = time.Now().UTC()
