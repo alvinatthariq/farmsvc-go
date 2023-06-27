@@ -33,7 +33,7 @@ func httpRespError(w http.ResponseWriter, r *http.Request, err error, statusCode
 	_, _ = w.Write(raw)
 }
 
-func httpRespSuccess(w http.ResponseWriter, r *http.Request, statusCode int, resp interface{}, p *entity.Pagination) {
+func httpRespSuccess(w http.ResponseWriter, r *http.Request, statusCode int, resp interface{}) {
 	meta := entity.Meta{
 		Path:       r.URL.String(),
 		StatusCode: statusCode,
@@ -72,7 +72,6 @@ func httpRespSuccess(w http.ResponseWriter, r *http.Request, statusCode int, res
 			Data: entity.HTTPFarmsData{
 				Farms: data,
 			},
-			Pagination: p,
 		}
 		raw, err = json.Marshal(httpResp)
 		if err != nil {
@@ -95,7 +94,6 @@ func httpRespSuccess(w http.ResponseWriter, r *http.Request, statusCode int, res
 			Data: entity.HTTPPondsData{
 				Ponds: data,
 			},
-			Pagination: p,
 		}
 		raw, err = json.Marshal(httpResp)
 		if err != nil {

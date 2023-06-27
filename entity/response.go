@@ -10,9 +10,8 @@ type HTTPFarmData struct {
 }
 
 type HTTPFarmsResp struct {
-	Meta       Meta          `json:"meta"`
-	Data       HTTPFarmsData `json:"data"`
-	Pagination *Pagination   `json:"pagination,omitempty"`
+	Meta Meta          `json:"meta"`
+	Data HTTPFarmsData `json:"data"`
 }
 
 type HTTPFarmsData struct {
@@ -51,9 +50,8 @@ type HTTPPondData struct {
 }
 
 type HTTPPondsResp struct {
-	Meta       Meta          `json:"meta"`
-	Data       HTTPPondsData `json:"data"`
-	Pagination *Pagination   `json:"pagination,omitempty"`
+	Meta Meta          `json:"meta"`
+	Data HTTPPondsData `json:"data"`
 }
 
 type HTTPPondsData struct {

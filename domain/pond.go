@@ -33,10 +33,10 @@ func (d *domain) CreatePond(v entity.CreatePondRequest) (pond entity.Pond, err e
 	}
 
 	// create to db
-	tx := d.gorm.Create(&pond)
-	if tx.Error != nil {
+	err = d.gorm.Create(&pond).Error
+	if err != nil {
 		var mysqlError *mysql.MySQLError
-		if errors.As(tx.Error, &mysqlError) {
+		if errors.As(err, &mysqlError) {
 			// check duplicate constraint
 			if mysqlError.Number == entity.CodeMySQLDuplicateEntry {
 				return pond, entity.ErrorPondAlreadyExist
@@ -44,26 +44,24 @@ func (d *domain) CreatePond(v entity.CreatePondRequest) (pond entity.Pond, err e
 		}
 	}
 
-	return pond, tx.Error
+	return pond, err
 }
 
 func (d *domain) GetPondByID(pondID string) (pond *entity.Pond, err error) {
 	// get from db
-	tx := d.gorm.First(&pond, "id = ?", pondID)
-	if errors.Is(tx.Error, gorm.ErrRecordNotFound) {
+	err = d.gorm.First(&pond, "id = ?", pondID).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, nil
 	}
 
-	return pond, tx.Error
+	return pond, err
 }
 
 func (d *domain) GetPond() (ponds []entity.Pond, err error) {
-	var pagination entity.Pagination
-
 	// get from db
-	tx := d.gorm.Scopes(paginate(ponds, &pagination, d.gorm)).Where("is_deleted is null").Find(&ponds)
-	if tx.Error != nil {
-		return ponds, tx.Error
+	err = d.gorm.Where("is_deleted is null").Find(&ponds).Error
+	if err != nil {
+		return ponds, err
 	}
 
 	return ponds, nil
@@ -103,9 +101,9 @@ func (d *domain) UpdatePond(pondID string, v entity.UpdatePondRequest) (pond ent
 		pond.Description = v.Description
 		pond.UpdatedAt = time.Now().UTC()
 
-		tx := d.gorm.Save(&pond)
-		if tx.Error != nil {
-			return pond, tx.Error
+		err := d.gorm.Save(&pond).Error
+		if err != nil {
+			return pond, err
 		}
 	}
 
@@ -125,7 +123,10 @@ func (d *domain) DeletePondByID(pondID string) (err error) {
 			// soft delete
 			pond.IsDeleted = sql.NullBool{Bool: true, Valid: true}
 			pond.DeletedAt = sql.NullTime{Time: time.Now().UTC(), Valid: true}
-			d.gorm.Save(&pond)
+			err = d.gorm.Save(&pond).Error
+			if err != nil {
+				return err
+			}
 		}
 	}
 

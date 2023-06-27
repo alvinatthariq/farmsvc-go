@@ -9,5 +9,5 @@ func (c *controller) GetAPIStatistic(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	httpRespSuccess(w, r, http.StatusOK, apiStatistics, nil)
+	httpRespSuccess(w, r, http.StatusOK, apiStatistics)
 }

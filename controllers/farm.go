@@ -32,7 +32,7 @@ func (c *controller) CreateFarm(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	httpRespSuccess(w, r, http.StatusCreated, farm, nil)
+	httpRespSuccess(w, r, http.StatusCreated, farm)
 }
 
 func (c *controller) GetFarmByID(w http.ResponseWriter, r *http.Request) {
@@ -50,7 +50,7 @@ func (c *controller) GetFarmByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	httpRespSuccess(w, r, http.StatusOK, *farmRes, nil)
+	httpRespSuccess(w, r, http.StatusOK, *farmRes)
 }
 
 func (c *controller) GetFarm(w http.ResponseWriter, r *http.Request) {
@@ -68,7 +68,7 @@ func (c *controller) GetFarm(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	httpRespSuccess(w, r, http.StatusOK, farms, nil)
+	httpRespSuccess(w, r, http.StatusOK, farms)
 }
 
 func (c *controller) UpdateFarm(w http.ResponseWriter, r *http.Request) {
@@ -90,7 +90,7 @@ func (c *controller) UpdateFarm(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	httpRespSuccess(w, r, http.StatusOK, farm, nil)
+	httpRespSuccess(w, r, http.StatusOK, farm)
 }
 
 func (c *controller) DeleteFarmByID(w http.ResponseWriter, r *http.Request) {
@@ -109,5 +109,5 @@ func (c *controller) DeleteFarmByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	httpRespSuccess(w, r, http.StatusOK, nil, nil)
+	httpRespSuccess(w, r, http.StatusOK, nil)
 }

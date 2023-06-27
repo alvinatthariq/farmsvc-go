@@ -3,7 +3,6 @@ package domain
 import (
 	"database/sql"
 	"errors"
-	"math"
 	"time"
 
 	"github.com/alvinatthariq/farmsvc-go/entity"
@@ -22,10 +21,10 @@ func (d *domain) CreateFarm(v entity.CreateFarmRequest) (farm entity.Farm, err e
 	}
 
 	// create to db
-	tx := d.gorm.Create(&farm)
-	if tx.Error != nil {
+	err = d.gorm.Create(&farm).Error
+	if err != nil {
 		var mysqlError *mysql.MySQLError
-		if errors.As(tx.Error, &mysqlError) {
+		if errors.As(err, &mysqlError) {
 			// check duplicate constraint
 			if mysqlError.Number == entity.CodeMySQLDuplicateEntry {
 				return farm, entity.ErrorFarmAlreadyExist
@@ -33,26 +32,24 @@ func (d *domain) CreateFarm(v entity.CreateFarmRequest) (farm entity.Farm, err e
 		}
 	}
 
-	return farm, tx.Error
+	return farm, err
 }
 
 func (d *domain) GetFarmByID(farmID string) (farm *entity.Farm, err error) {
 	// get from db
-	tx := d.gorm.First(&farm, "id = ?", farmID)
-	if errors.Is(tx.Error, gorm.ErrRecordNotFound) {
+	err = d.gorm.First(&farm, "id = ?", farmID).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, nil
 	}
 
-	return farm, tx.Error
+	return farm, err
 }
 
 func (d *domain) GetFarm() (farms []entity.Farm, err error) {
-	var pagination entity.Pagination
-
 	// get from db
-	tx := d.gorm.Scopes(paginate(farms, &pagination, d.gorm)).Where("is_deleted is null").Find(&farms)
-	if tx.Error != nil {
-		return farms, tx.Error
+	err = d.gorm.Where("is_deleted is null").Find(&farms).Error
+	if err != nil {
+		return farms, err
 	}
 
 	return farms, nil
@@ -79,9 +76,9 @@ func (d *domain) UpdateFarm(farmID string, v entity.UpdateFarmRequest) (farm ent
 		farm.Description = v.Description
 		farm.UpdatedAt = time.Now().UTC()
 
-		tx := d.gorm.Save(&farm)
-		if tx.Error != nil {
-			return farm, tx.Error
+		err = d.gorm.Save(&farm).Error
+		if err != nil {
+			return farm, err
 		}
 	}
 
@@ -101,22 +98,11 @@ func (d *domain) DeleteFarmByID(farmID string) (err error) {
 			// soft delete
 			farm.IsDeleted = sql.NullBool{Bool: true, Valid: true}
 			farm.DeletedAt = sql.NullTime{Time: time.Now().UTC(), Valid: true}
-			d.gorm.Save(&farm)
+			if err := d.gorm.Save(&farm).Error; err != nil {
+				return err
+			}
 		}
 	}
 
 	return nil
-}
-
-func paginate(value interface{}, pagination *entity.Pagination, db *gorm.DB) func(db *gorm.DB) *gorm.DB {
-	var totalRows int64
-	db.Model(value).Count(&totalRows)
-
-	pagination.TotalRows = totalRows
-	totalPages := int(math.Ceil(float64(totalRows) / float64(pagination.Limit)))
-	pagination.TotalPages = totalPages
-
-	return func(db *gorm.DB) *gorm.DB {
-		return db.Offset(pagination.GetOffset()).Limit(pagination.GetLimit()).Order(pagination.GetSort())
-	}
 }

@@ -36,7 +36,7 @@ func (c *controller) CreatePond(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	httpRespSuccess(w, r, http.StatusCreated, pond, nil)
+	httpRespSuccess(w, r, http.StatusCreated, pond)
 }
 
 func (c *controller) GetPondByID(w http.ResponseWriter, r *http.Request) {
@@ -54,7 +54,7 @@ func (c *controller) GetPondByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	httpRespSuccess(w, r, http.StatusOK, *pondRes, nil)
+	httpRespSuccess(w, r, http.StatusOK, *pondRes)
 }
 
 func (c *controller) GetPond(w http.ResponseWriter, r *http.Request) {
@@ -72,7 +72,7 @@ func (c *controller) GetPond(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	httpRespSuccess(w, r, http.StatusOK, ponds, nil)
+	httpRespSuccess(w, r, http.StatusOK, ponds)
 }
 
 func (c *controller) UpdatePond(w http.ResponseWriter, r *http.Request) {
@@ -99,7 +99,7 @@ func (c *controller) UpdatePond(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	httpRespSuccess(w, r, http.StatusOK, pond, nil)
+	httpRespSuccess(w, r, http.StatusOK, pond)
 }
 
 func (c *controller) DeletePondByID(w http.ResponseWriter, r *http.Request) {
@@ -118,5 +118,5 @@ func (c *controller) DeletePondByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	httpRespSuccess(w, r, http.StatusOK, nil, nil)
+	httpRespSuccess(w, r, http.StatusOK, nil)
 }
