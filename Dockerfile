@@ -2,6 +2,8 @@ FROM golang:1.17-alpine
 
 ENV GOPATH /go
 
+ENV env=docker
+
 RUN mkdir -p "$GOPATH/src/github.com/alvinatthariq/farmsvc-go" "$GOPATH/bin" && chmod -R 777 "$GOPATH"
 
 ADD . ${GOPATH}/src/github.com/alvinatthariq/farmsvc-go/

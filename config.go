@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"os"
 
 	"github.com/spf13/viper"
 )
@@ -26,7 +27,14 @@ var AppConfig *Config
 func LoadAppConfig() {
 	log.Println("Loading Server Configurations...")
 	viper.AddConfigPath(".")
-	viper.SetConfigName("config")
+
+	env := os.Getenv("env")
+	if env == "docker" {
+		viper.SetConfigName("config-docker")
+	} else {
+		viper.SetConfigName("config")
+	}
+
 	viper.SetConfigType("json")
 	err := viper.ReadInConfig()
 	if err != nil {

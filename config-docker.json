@@ -1,0 +1,10 @@
+{
+    "port": 8080,
+    "mysql":{
+        "connection_string": "root:@tcp(docker.for.mac.localhost:3307)/farm_db?parseTime=true"
+    },
+    "redis": {
+        "host": "redis:6379",
+        "password": ""
+    }
+}
