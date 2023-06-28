@@ -68,7 +68,15 @@ func (c *controller) GetFarm(w http.ResponseWriter, r *http.Request) {
 	// upsert api statistic
 	c.domain.UpsertAPIStatistic(entity.APIPathGETFarm, r.UserAgent())
 
-	farms, err := c.domain.GetFarm()
+	// get url query param
+	urlVal := r.URL.Query()
+
+	param := entity.FarmParam{
+		ID:   urlVal.Get("id"),
+		Name: urlVal.Get("name"),
+	}
+
+	farms, err := c.domain.GetFarm(param)
 	if err != nil {
 		httpRespError(w, r, err, http.StatusInternalServerError)
 		return

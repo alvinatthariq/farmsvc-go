@@ -156,6 +156,7 @@ func TestGetFarm(t *testing.T) {
 			testID   int
 			testType string
 			testDesc string
+			param    entity.FarmParam
 			prepare  func()
 		}{
 			{
@@ -177,7 +178,7 @@ func TestGetFarm(t *testing.T) {
 		for _, tc := range testCases {
 			tc.prepare()
 			t.Logf("%d - [%s] : %s", tc.testID, tc.testType, tc.testDesc)
-			_, err := dom.GetFarm()
+			_, err := dom.GetFarm(tc.param)
 			if tc.testType == "P" {
 				So(err, ShouldBeNil)
 			} else {
@@ -455,6 +456,7 @@ func TestGetPond(t *testing.T) {
 			testID   int
 			testType string
 			testDesc string
+			param    entity.PondParam
 			prepare  func()
 		}{
 			{
@@ -484,7 +486,7 @@ func TestGetPond(t *testing.T) {
 		for _, tc := range testCases {
 			tc.prepare()
 			t.Logf("%d - [%s] : %s", tc.testID, tc.testType, tc.testDesc)
-			_, err := dom.GetPond()
+			_, err := dom.GetPond(tc.param)
 			if tc.testType == "P" {
 				So(err, ShouldBeNil)
 			} else {

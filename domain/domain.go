@@ -16,14 +16,14 @@ type DomainItf interface {
 	// Farm
 	CreateFarm(v entity.CreateFarmRequest) (farm entity.Farm, err error)
 	GetFarmByID(farmID string) (farm *entity.Farm, err error)
-	GetFarm() (farms []entity.Farm, err error)
+	GetFarm(param entity.FarmParam) (farms []entity.Farm, err error)
 	UpdateFarm(farmID string, v entity.UpdateFarmRequest) (farm entity.Farm, err error)
 	DeleteFarmByID(farmID string) (err error)
 
 	// Pond
 	CreatePond(v entity.CreatePondRequest) (pond entity.Pond, err error)
 	GetPondByID(pondID string) (pond *entity.Pond, err error)
-	GetPond() (ponds []entity.Pond, err error)
+	GetPond(param entity.PondParam) (ponds []entity.Pond, err error)
 	UpdatePond(pondID string, v entity.UpdatePondRequest) (pond entity.Pond, err error)
 	DeletePondByID(pondID string) (err error)
 

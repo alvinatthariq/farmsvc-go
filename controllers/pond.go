@@ -71,7 +71,16 @@ func (c *controller) GetPond(w http.ResponseWriter, r *http.Request) {
 	// upsert api statistic
 	c.domain.UpsertAPIStatistic(entity.APIPathGETPond, r.UserAgent())
 
-	ponds, err := c.domain.GetPond()
+	// get url query param
+	urlVal := r.URL.Query()
+
+	param := entity.PondParam{
+		ID:     urlVal.Get("id"),
+		FarmID: urlVal.Get("farm_id"),
+		Name:   urlVal.Get("name"),
+	}
+
+	ponds, err := c.domain.GetPond(param)
 	if err != nil {
 		httpRespError(w, r, err, http.StatusInternalServerError)
 		return

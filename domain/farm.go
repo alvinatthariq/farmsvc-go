@@ -50,9 +50,9 @@ func (d *domain) GetFarmByID(farmID string) (farm *entity.Farm, err error) {
 	return farm, err
 }
 
-func (d *domain) GetFarm() (farms []entity.Farm, err error) {
+func (d *domain) GetFarm(param entity.FarmParam) (farms []entity.Farm, err error) {
 	// get from db
-	err = d.gorm.Where("is_deleted is null").Find(&farms).Error
+	err = d.gorm.Where("is_deleted is null").Where(&param).Find(&farms).Error
 	if err != nil {
 		return farms, err
 	}

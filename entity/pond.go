@@ -17,6 +17,12 @@ type Pond struct {
 	IsDeleted   sql.NullBool `json:"-"`
 }
 
+type PondParam struct {
+	ID     string
+	FarmID string
+	Name   string
+}
+
 func (p Pond) Validate() error {
 	p.ID = strings.TrimSpace(p.ID)
 	if len(p.ID) < 1 {

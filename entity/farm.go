@@ -16,6 +16,11 @@ type Farm struct {
 	IsDeleted   sql.NullBool `json:"-"`
 }
 
+type FarmParam struct {
+	ID   string `json:"id" param:"id"`
+	Name string `json:"name" param:"name"`
+}
+
 func (f Farm) Validate() error {
 	f.ID = strings.TrimSpace(f.ID)
 	if len(f.ID) < 1 {
