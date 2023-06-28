@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/alvinatthariq/farmsvc-go/entity"
 
@@ -71,9 +72,22 @@ func (c *controller) GetFarm(w http.ResponseWriter, r *http.Request) {
 	// get url query param
 	urlVal := r.URL.Query()
 
+	// limit
+	limitStr := urlVal.Get("limit")
+	limit, _ := strconv.Atoi(limitStr)
+	if limit < 1 {
+		limit = 10
+	}
+
+	// page
+	pageStr := urlVal.Get("page")
+	page, _ := strconv.Atoi(pageStr)
+
 	param := entity.FarmParam{
-		ID:   urlVal.Get("id"),
-		Name: urlVal.Get("name"),
+		ID:    urlVal.Get("id"),
+		Name:  urlVal.Get("name"),
+		Limit: limit,
+		Page:  page,
 	}
 
 	farms, err := c.domain.GetFarm(param)

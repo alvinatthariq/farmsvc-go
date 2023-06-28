@@ -21,6 +21,8 @@ type PondParam struct {
 	ID     string
 	FarmID string
 	Name   string
+	Limit  int `gorm:"-"`
+	Page   int `gorm:"-"`
 }
 
 func (p Pond) Validate() error {

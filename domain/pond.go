@@ -64,7 +64,13 @@ func (d *domain) GetPondByID(pondID string) (pond *entity.Pond, err error) {
 
 func (d *domain) GetPond(param entity.PondParam) (ponds []entity.Pond, err error) {
 	// get from db
-	err = d.gorm.Where("is_deleted is null").Where(&param).Find(&ponds).Error
+	err = d.gorm.
+		Where("is_deleted is null").
+		Where(&param).
+		Offset((param.Page - 1) * param.Limit).
+		Limit(param.Limit).
+		Find(&ponds).
+		Error
 	if err != nil {
 		return ponds, err
 	}

@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/alvinatthariq/farmsvc-go/entity"
 
@@ -74,10 +75,23 @@ func (c *controller) GetPond(w http.ResponseWriter, r *http.Request) {
 	// get url query param
 	urlVal := r.URL.Query()
 
+	// limit
+	limitStr := urlVal.Get("limit")
+	limit, _ := strconv.Atoi(limitStr)
+	if limit < 1 {
+		limit = 10
+	}
+
+	// page
+	pageStr := urlVal.Get("page")
+	page, _ := strconv.Atoi(pageStr)
+
 	param := entity.PondParam{
 		ID:     urlVal.Get("id"),
 		FarmID: urlVal.Get("farm_id"),
 		Name:   urlVal.Get("name"),
+		Page:   page,
+		Limit:  limit,
 	}
 
 	ponds, err := c.domain.GetPond(param)

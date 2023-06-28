@@ -17,8 +17,10 @@ type Farm struct {
 }
 
 type FarmParam struct {
-	ID   string `json:"id" param:"id"`
-	Name string `json:"name" param:"name"`
+	ID    string
+	Name  string
+	Limit int `gorm:"-"`
+	Page  int `gorm:"-"`
 }
 
 func (f Farm) Validate() error {
