@@ -24,12 +24,23 @@ func (c *controller) CreateFarm(w http.ResponseWriter, r *http.Request) {
 
 	farm, err := c.domain.CreateFarm(createFarmRequest)
 	if err != nil {
-		if errors.Is(err, entity.ErrorFarmAlreadyExist) {
+		switch err {
+		case entity.ErrorFarmAlreadyExist:
 			httpRespError(w, r, err, http.StatusConflict)
 			return
+		case
+			entity.ErrorFarmIDRequired,
+			entity.ErrorFarmIDMaxLength,
+			entity.ErrorFarmNameRequired,
+			entity.ErrorFarmNameMaxLength,
+			entity.ErrorFarmDescriptionRequired,
+			entity.ErrorFarmDescriptionMaxLength:
+			httpRespError(w, r, err, http.StatusBadRequest)
+			return
+		default:
+			httpRespError(w, r, err, http.StatusInternalServerError)
+			return
 		}
-		httpRespError(w, r, err, http.StatusInternalServerError)
-		return
 	}
 
 	httpRespSuccess(w, r, http.StatusCreated, farm)
@@ -86,8 +97,23 @@ func (c *controller) UpdateFarm(w http.ResponseWriter, r *http.Request) {
 
 	farm, err := c.domain.UpdateFarm(farmID, reqBody)
 	if err != nil {
-		httpRespError(w, r, fmt.Errorf("Error UpdateFarm : %w", err), http.StatusInternalServerError)
-		return
+		switch err {
+		case entity.ErrorFarmAlreadyExist:
+			httpRespError(w, r, err, http.StatusConflict)
+			return
+		case
+			entity.ErrorFarmIDRequired,
+			entity.ErrorFarmIDMaxLength,
+			entity.ErrorFarmNameRequired,
+			entity.ErrorFarmNameMaxLength,
+			entity.ErrorFarmDescriptionRequired,
+			entity.ErrorFarmDescriptionMaxLength:
+			httpRespError(w, r, err, http.StatusBadRequest)
+			return
+		default:
+			httpRespError(w, r, err, http.StatusInternalServerError)
+			return
+		}
 	}
 
 	httpRespSuccess(w, r, http.StatusOK, farm)

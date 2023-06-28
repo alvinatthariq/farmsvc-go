@@ -24,16 +24,26 @@ func (c *controller) CreatePond(w http.ResponseWriter, r *http.Request) {
 
 	pond, err := c.domain.CreatePond(createPondRequest)
 	if err != nil {
-		if errors.Is(err, entity.ErrorPondAlreadyExist) {
+		switch err {
+		case entity.ErrorPondAlreadyExist:
 			httpRespError(w, r, err, http.StatusConflict)
 			return
-		} else if errors.Is(err, entity.ErrorFarmNotFound) {
+		case
+			entity.ErrorFarmNotFound,
+			entity.ErrorFarmIDRequired,
+			entity.ErrorFarmIDMaxLength,
+			entity.ErrorPondIDRequired,
+			entity.ErrorPondIDMaxLength,
+			entity.ErrorPondNameRequired,
+			entity.ErrorPondNameMaxLength,
+			entity.ErrorPondDescriptionRequired,
+			entity.ErrorPondDescriptionMaxLength:
 			httpRespError(w, r, err, http.StatusBadRequest)
 			return
+		default:
+			httpRespError(w, r, err, http.StatusInternalServerError)
+			return
 		}
-
-		httpRespError(w, r, err, http.StatusInternalServerError)
-		return
 	}
 
 	httpRespSuccess(w, r, http.StatusCreated, pond)
@@ -90,13 +100,26 @@ func (c *controller) UpdatePond(w http.ResponseWriter, r *http.Request) {
 
 	pond, err := c.domain.UpdatePond(pondID, reqBody)
 	if err != nil {
-		if errors.Is(err, entity.ErrorFarmNotFound) {
+		switch err {
+		case entity.ErrorPondAlreadyExist:
+			httpRespError(w, r, err, http.StatusConflict)
+			return
+		case
+			entity.ErrorFarmNotFound,
+			entity.ErrorFarmIDRequired,
+			entity.ErrorFarmIDMaxLength,
+			entity.ErrorPondIDRequired,
+			entity.ErrorPondIDMaxLength,
+			entity.ErrorPondNameRequired,
+			entity.ErrorPondNameMaxLength,
+			entity.ErrorPondDescriptionRequired,
+			entity.ErrorPondDescriptionMaxLength:
 			httpRespError(w, r, err, http.StatusBadRequest)
 			return
+		default:
+			httpRespError(w, r, err, http.StatusInternalServerError)
+			return
 		}
-
-		httpRespError(w, r, fmt.Errorf("Error UpdatePond : %w", err), http.StatusInternalServerError)
-		return
 	}
 
 	httpRespSuccess(w, r, http.StatusOK, pond)

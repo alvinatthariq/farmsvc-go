@@ -20,6 +20,11 @@ func (d *domain) CreateFarm(v entity.CreateFarmRequest) (farm entity.Farm, err e
 		UpdatedAt:   time.Now().UTC(),
 	}
 
+	err = farm.Validate()
+	if err != nil {
+		return farm, err
+	}
+
 	// create to db
 	err = d.gorm.Create(&farm).Error
 	if err != nil {
@@ -75,6 +80,11 @@ func (d *domain) UpdateFarm(farmID string, v entity.UpdateFarmRequest) (farm ent
 		farm.Name = v.Name
 		farm.Description = v.Description
 		farm.UpdatedAt = time.Now().UTC()
+
+		err = farm.Validate()
+		if err != nil {
+			return farm, err
+		}
 
 		err = d.gorm.Save(&farm).Error
 		if err != nil {

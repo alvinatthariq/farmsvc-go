@@ -2,8 +2,8 @@ package domain
 
 import (
 	"github.com/alvinatthariq/farmsvc-go/entity"
-	"github.com/go-redis/redis"
 
+	"github.com/go-redis/redis"
 	"gorm.io/gorm"
 )
 

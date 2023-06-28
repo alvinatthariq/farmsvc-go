@@ -2,6 +2,7 @@ package entity
 
 import (
 	"database/sql"
+	"strings"
 	"time"
 )
 
@@ -14,6 +15,38 @@ type Pond struct {
 	UpdatedAt   time.Time    `json:"updated_at"`
 	DeletedAt   sql.NullTime `json:"-"`
 	IsDeleted   sql.NullBool `json:"-"`
+}
+
+func (p Pond) Validate() error {
+	p.ID = strings.TrimSpace(p.ID)
+	if len(p.ID) < 1 {
+		return ErrorPondIDRequired
+	} else if len(p.ID) > 36 {
+		return ErrorPondIDMaxLength
+	}
+
+	p.FarmID = strings.TrimSpace(p.FarmID)
+	if len(p.FarmID) < 1 {
+		return ErrorFarmIDRequired
+	} else if len(p.FarmID) > 36 {
+		return ErrorFarmIDMaxLength
+	}
+
+	p.Name = strings.TrimSpace(p.Name)
+	if len(p.Name) < 1 {
+		return ErrorPondNameRequired
+	} else if len(p.Name) > 100 {
+		return ErrorPondNameMaxLength
+	}
+
+	p.Description = strings.TrimSpace(p.Description)
+	if len(p.Description) < 1 {
+		return ErrorPondDescriptionRequired
+	} else if len(p.Description) > 150 {
+		return ErrorPondDescriptionMaxLength
+	}
+
+	return nil
 }
 
 type CreatePondRequest struct {

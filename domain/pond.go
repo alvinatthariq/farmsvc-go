@@ -32,6 +32,11 @@ func (d *domain) CreatePond(v entity.CreatePondRequest) (pond entity.Pond, err e
 		UpdatedAt:   time.Now().UTC(),
 	}
 
+	err = pond.Validate()
+	if err != nil {
+		return pond, err
+	}
+
 	// create to db
 	err = d.gorm.Create(&pond).Error
 	if err != nil {
@@ -100,6 +105,11 @@ func (d *domain) UpdatePond(pondID string, v entity.UpdatePondRequest) (pond ent
 		pond.Name = v.Name
 		pond.Description = v.Description
 		pond.UpdatedAt = time.Now().UTC()
+
+		err = pond.Validate()
+		if err != nil {
+			return pond, err
+		}
 
 		err := d.gorm.Save(&pond).Error
 		if err != nil {

@@ -36,6 +36,9 @@ func TestMain(t *testing.M) {
 		panic("Cannot connect to DB")
 	}
 
+	dbgorm.AutoMigrate(&entity.Farm{})
+	dbgorm.AutoMigrate(&entity.Pond{})
+
 	redisClient = redis.NewClient(&redis.Options{
 		Addr:     "127.0.0.1:6379",
 		Password: "",
