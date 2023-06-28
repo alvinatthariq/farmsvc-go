@@ -91,3 +91,7 @@ To run tests, run the following command
   make run-test
 ```
 
+## Documentation
+
+[Documentation](https://documenter.getpostman.com/view/27910682/2s93z9b2U1)
+
